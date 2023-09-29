@@ -1,0 +1,10 @@
+# Rider files
+.idea/
+*.sln
+*.vcxproj*
+
+# Build files
+*x64/
+
+# Only the Rider solution cpp file is here
+AlgorithmsAndDataStructures/
