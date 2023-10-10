@@ -1,10 +1,12 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+// #include <algorithm>
 
 #include "insertion_sort.h"
 #include "bubble_sort.h"
 #include "selection_sort.h"
+#include "heap_sort.h"
 
 int main(int argc, char* argv[])
 {
@@ -12,7 +14,8 @@ int main(int argc, char* argv[])
 
     // bubble_sort(vec);
     // insertion_sort(vec);
-    selection_sort(vec);
+    // selection_sort(vec);
+    heap_sort(vec);
     
     for (auto el : vec)
     {
