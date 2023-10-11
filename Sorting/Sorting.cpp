@@ -6,6 +6,7 @@
 #include "bubble_sort.h"
 #include "selection_sort.h"
 #include "heap_sort.h"
+#include "merge_sort.h"
 
 int main(int argc, char* argv[])
 {
@@ -14,7 +15,9 @@ int main(int argc, char* argv[])
     // bubble_sort(vec.begin(), vec.end());
     // insertion_sort(vec.begin(), vec.end());
     // selection_sort(vec.begin(), vec.end());
-    heap_sort(vec.begin(), vec.end());
+    // heap_sort(vec.begin(), vec.end());
+    merge_sort(vec.begin(), vec.end());
+    
     for (auto el : vec)
     {
         std::cout << el << " ";
