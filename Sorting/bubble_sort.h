@@ -1,24 +1,27 @@
 #pragma once
 
-template <typename T>
-void bubble_sort(std::vector<T>& vec, bool asc=true)
+template <typename RandomIt>
+void bubble_sort(RandomIt begin, RandomIt end, bool asc = true)
 {
+    using T = typename std::iterator_traits<RandomIt>::value_type;
+
+    // swap condition for the pair of elements
+    // if ascending -> left should be greater
+    // if descending -> left should be lower
+    auto should_swap = asc
+                           ? [](const T& l, const T& r) -> bool { return l > r; }
+                           : [](const T& l, const T& r) -> bool { return l < r; };
+
     // size of the offset for every iteration is increasing by one, since we push the extreme element to the back
-    for (size_t offset = 0; offset < vec.size(); ++offset)
+    for (auto unsorted_end = end; unsorted_end != begin; --unsorted_end)
     {
         bool swapped = false;
         // iterate over the unsorted part of the vector, swapping pairs towards back depending on condition
-        for (size_t bubble_idx = 1; bubble_idx < vec.size() - offset; ++bubble_idx)
+        for (auto bubble = begin + 1; bubble < unsorted_end; ++bubble)
         {
-            // swap condition for the pair of elements
-            // if ascending -> left should be greater
-            // if descending -> left should be lower
-            const bool should_swap = (asc && vec[bubble_idx - 1] > vec[bubble_idx]) ||
-                                     (!asc && vec[bubble_idx - 1] < vec[bubble_idx]);
-            
-            if (should_swap)
+            if (should_swap(*(bubble - 1), *bubble))
             {
-                std::swap(vec[bubble_idx - 1], vec[bubble_idx]);
+                std::swap(*(bubble - 1), *bubble);
                 swapped = true;
             }
         }

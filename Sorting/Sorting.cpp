@@ -1,7 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <utility>
-// #include <algorithm>
 
 #include "insertion_sort.h"
 #include "bubble_sort.h"
@@ -10,13 +9,12 @@
 
 int main(int argc, char* argv[])
 {
-    std::vector<int> vec{55, 3, 80, 1, 13, 4, 78, 94, 10, 88, 4, 78, 33};
+    std::vector<int> vec{55, 3, 80, 13, 4, 78, 94, 10, 88, 4, 78, 33, 1};
 
-    // bubble_sort(vec);
-    // insertion_sort(vec);
-    // selection_sort(vec);
-    heap_sort(vec);
-    
+    // bubble_sort(vec.begin(), vec.end());
+    // insertion_sort(vec.begin(), vec.end());
+    // selection_sort(vec.begin(), vec.end());
+    heap_sort(vec.begin(), vec.end());
     for (auto el : vec)
     {
         std::cout << el << " ";
