@@ -1,4 +1,5 @@
 #pragma once
+#include <iterator>
 
 template <typename RandomIt>
 void selection_sort(RandomIt begin, RandomIt end, bool asc = true)

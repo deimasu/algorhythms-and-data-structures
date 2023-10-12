@@ -1,4 +1,5 @@
 #pragma once
+#include <iterator>
 #include <vector>
 
 template <typename RandomIt, typename Comparator>
