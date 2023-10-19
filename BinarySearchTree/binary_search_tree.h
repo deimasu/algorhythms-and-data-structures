@@ -122,16 +122,16 @@ public:
         // identify type of node by children count to determine the right delete method to use
         switch (check_node_type(delete_result))
         {
-        case no_children:
+        case node_type::no_children:
             delete_node_no_children(delete_result);
             break;
-        case one_child:
+        case node_type::one_child:
             delete_node_one_child(delete_result);
             break;
-        case two_children:
+        case node_type::two_children:
             delete_node_two_children(delete_result);
             break;
-        case invalid:
+        case node_type::invalid:
             throw std::runtime_error("Couldn't delete the value from the tree: invalid node");
         default:
             throw std::runtime_error("Unsupported node type");
@@ -412,13 +412,13 @@ public:
 
 private:
     // possible directions of the child nodes in binary tree
-    enum child_direction { left, right, none };
+    enum class child_direction { left, right, none };
 
     // node types based on child elements for deleting methods
-    enum node_type { no_children, one_child, two_children, invalid };
+    enum class node_type { no_children, one_child, two_children, invalid };
 
     // used in find_extreme_in_subtree to determine the direction for search 
-    enum search_extreme { min_value, max_value };
+    enum class search_extreme { min_value, max_value };
 
     // struct that contains target for search, its parent, and the the direction from the parent node to target
     // (to avoid values check)
@@ -470,21 +470,21 @@ private:
     {
         // find inorder predecessor of the deleting node (max in left part of the tree)
         search_result replace_result = find_extreme_in_subtree(delete_result.target->left_,
-                                                               delete_result.target, left, max_value);
+                                                               delete_result.target, child_direction::left, search_extreme::max_value);
 
         // delete inorder predecessor from the tree without deleting node itself
         switch (check_node_type(replace_result))
         {
-        case no_children:
+        case node_type::no_children:
             delete_node_no_children(replace_result, false);
             break;
-        case one_child:
+        case node_type::one_child:
             delete_node_one_child(replace_result, false);
             break;
         // max or min element cannot have two children
-        case two_children:
+        case node_type::two_children:
             throw std::runtime_error("Max or min element has two children: unexpected behavior");
-        case invalid:
+        case node_type::invalid:
             throw std::runtime_error("Couldn't delete the value from the tree: invalid node");
         default:
             throw std::runtime_error("Unsupported node type");
@@ -525,22 +525,22 @@ private:
         // node to delete has no children
         if (!result.target->left_ && !result.target->right_)
         {
-            return no_children;
+            return node_type::no_children;
         }
 
         // node to delete has two children
         if (result.target->left_ && result.target->right_)
         {
-            return two_children;
+            return node_type::two_children;
         }
 
         // node to delete has one child
         if (result.target->left_ || result.target->right_)
         {
-            return one_child;
+            return node_type::one_child;
         }
 
-        return invalid;
+        return node_type::invalid;
     }
 
     void update_parent_link(const search_result& from_result, bst_node<T>* to)
@@ -552,13 +552,13 @@ private:
         // check which child of parent is the target node
         switch (from_result.direction)
         {
-        case left:
+        case child_direction::left:
             from_result.parent->left_ = to;
             break;
-        case right:
+        case child_direction::right:
             from_result.parent->right_ = to;
             break;
-        case none:
+        case child_direction::none:
             throw std::runtime_error("Couldn't update parent link: invalid direction");
         default:
             throw std::runtime_error("Unsupported type of node");
@@ -569,7 +569,7 @@ private:
     {
         bst_node<T>* parent = nullptr;
         bst_node<T>* current = root_;
-        child_direction direction = none;
+        child_direction direction = child_direction::none;
 
         // while haven't faced nullptr
         while (current)
@@ -585,17 +585,17 @@ private:
             // right - greater values, left - lower values
             if (value > current->get())
             {
-                direction = right;
+                direction = child_direction::right;
                 current = current->right_;
             }
             else
             {
-                direction = left;
+                direction = child_direction::left;
                 current = current->left_;
             }
         }
         // if there was no return in the while loop - haven't found anything
-        return search_result{nullptr, nullptr, none};
+        return search_result{nullptr, nullptr, child_direction::none};
     }
 
     // find extreme (min or max value) among node and its descendants
@@ -607,7 +607,7 @@ private:
         child_direction direction = initial_direction;
 
         // determine the direction of passing based on min or max search
-        auto next_child = extreme == min_value
+        auto next_child = extreme == search_extreme::min_value
                               ? [](bst_node<T>* node) -> bst_node<T>* { return node->left_; }
                               : [](bst_node<T>* node) -> bst_node<T>* { return node->right_; };
 
@@ -616,7 +616,7 @@ private:
         {
             parent = current;
             current = next_child(current);
-            direction = extreme == min_value ? left : right;
+            direction = extreme == search_extreme::min_value ? child_direction::left : child_direction::right;
         }
         return {parent, current, direction};
     }
